@@ -1,0 +1,6 @@
+.eslitrc
+/node_modules
+/dist
+lint-staged.config.js
+next.config.js
+rollup.config.js

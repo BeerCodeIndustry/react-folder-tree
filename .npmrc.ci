@@ -1,0 +1,4 @@
+@beercode:always-auth:false
+always-auth=false
+@beercode:registry=https://registry.npmjs.org/
+//https://registry.npmjs.org//:_authToken=${NODE_AUTH_TOKEN}
