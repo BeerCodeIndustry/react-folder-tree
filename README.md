@@ -6,6 +6,7 @@ Simple yet flexible folder tree component with Imperative and Declarative API wi
 
 ```jsx
 <FolderTree
+  onFileClick={(id: string) => {}}
   tree={[
     {
       type: 'folder',
