@@ -5,7 +5,7 @@ export interface FolderTreeProps {
   activeId?: Node['id']
   onFileClick: (id: NonNullable<Node['id']>) => void
   theme?: Theme
-  overrideTheme?: Record<Theme, ThemeObj>
+  overrideTheme?: Partial<Record<Theme, Partial<ThemeObj>>>
 }
 
 export type Theme = 'dark' | 'light'
@@ -35,7 +35,7 @@ export interface FolderTreeContextType {
 
 export interface FolderTreeProviderType {
   theme: Theme
-  overrideTheme?: Record<Theme, ThemeObj>
+  overrideTheme?: FolderTreeProps['overrideTheme']
   children: ReactNode
   onFileClick: FolderTreeProps['onFileClick']
   activeId: Node['id']
