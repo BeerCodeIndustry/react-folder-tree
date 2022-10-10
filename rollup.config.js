@@ -4,7 +4,6 @@ import typescript from 'rollup-plugin-typescript2';
 import dts from 'rollup-plugin-dts'
 import { terser } from 'rollup-plugin-terser'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
-import url from '@rollup/plugin-url'
 import css from 'rollup-plugin-import-css'
 import external from 'rollup-plugin-node-externals'
 import cleanup from 'rollup-plugin-cleanup'
@@ -33,7 +32,6 @@ const config =  [
       commonjs(),
       typescript(),
       terser(),
-      url(),
       css(),
       cleanup()
     ],
