@@ -2,6 +2,8 @@
 
 Simple yet flexible folder tree component
 
+[Live Demo](https://libs-demo.vercel.app/?path=/docs/libs-react-folder-tree--light-folder-tree)
+
 ## Default Folder Tree
 
 ```jsx
