@@ -1,6 +1,6 @@
 {
   "name": "@beercode/react-folder-tree",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "private": false,
   "description": "React Folder Tree",
   "main": "dist/cjs/index.js",
