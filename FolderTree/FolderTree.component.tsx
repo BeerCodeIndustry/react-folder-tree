@@ -6,24 +6,60 @@ import {
   TextElement,
   Typography,
 } from '@beercode/common-frontend'
-import { ChevronDown, ChevronRight } from '@beercode/common-icons'
+import { ChevronDown, ChevronRight, FolderSVG } from '@beercode/common-icons'
 import { useToggle } from '@beercode/common-utils'
-import React, { useContext, useMemo } from 'react'
+import React, { MouseEvent, useContext, useMemo } from 'react'
 
 import {
+  Checkbox,
   Container,
-  FolderContainer,
+  ItemContainer,
   NodeContainer,
   Row,
   TreeContainer,
 } from './FolderTree.styles'
-import { File, Folder, FolderTreeProps } from './FolderTree.types'
+import { File, Folder, FolderTreeProps, RowProps } from './FolderTree.types'
 import { FolderTreeContext, FolderTreeProvider } from './context'
 import { reqSort } from './utils/sortNode'
 
+const TreeRow: React.FC<RowProps> = ({
+  children,
+  onClick,
+  id,
+  ...flexboxProps
+}) => {
+  const { activeId, selected, onCheck, canSelect } =
+    useContext(FolderTreeContext)
+
+  const handleCheck = (e: MouseEvent<HTMLElement>): void => {
+    e.stopPropagation()
+    e.preventDefault()
+    onCheck(id)
+  }
+
+  return (
+    <Row active={activeId === id} onClick={onClick} {...flexboxProps}>
+      {children}
+      {canSelect && (
+        <Checkbox
+          onCheck={handleCheck}
+          fillColor='VIOLET_700'
+          isRounded
+          checked={
+            // TODO add mb??
+            // !!selected.find(selectedId => id?.match(RegExp(`${selectedId}`)))
+            selected.includes(id!)
+          }
+          arrowColor='WHITE'
+        />
+      )}
+    </Row>
+  )
+}
+
 const RenderFolder: React.FC<Folder> = ({ name, files, id }) => {
   const [isOpen, toggleOpen] = useToggle(false)
-  const { onRowClick, activeId } = useContext(FolderTreeContext)
+  const { onRowClick } = useContext(FolderTreeContext)
 
   const onClick = (e: React.MouseEvent<HTMLElement>): void => {
     toggleOpen()
@@ -32,25 +68,23 @@ const RenderFolder: React.FC<Folder> = ({ name, files, id }) => {
   }
 
   return (
-    <FolderContainer flexDirection='column'>
-      <Row
-        onClick={onClick}
-        alignItems='center'
-        gap={0.5}
-        active={activeId === id}
-      >
+    <ItemContainer flexDirection='column'>
+      <TreeRow onClick={onClick} alignItems='center' gap={0.5} id={id}>
         <Icon color={Color.BLUE_300} size={IconSize.SM}>
           {isOpen ? <ChevronDown /> : <ChevronRight />}
         </Icon>
+        <Icon color={Color.INDIGO_800}>
+          <FolderSVG />
+        </Icon>
         <TextElement typography={Typography.BASE}>{name}</TextElement>
-      </Row>
+      </TreeRow>
       {isOpen && <RenderTree tree={files} />}
-    </FolderContainer>
+    </ItemContainer>
   )
 }
 
 const RenderFile: React.FC<File> = ({ name, id }) => {
-  const { onRowClick, activeId } = useContext(FolderTreeContext)
+  const { onRowClick } = useContext(FolderTreeContext)
 
   const onClick = (e: React.MouseEvent<HTMLElement>): void => {
     onRowClick(id)
@@ -58,9 +92,11 @@ const RenderFile: React.FC<File> = ({ name, id }) => {
   }
 
   return (
-    <Row active={activeId === id} onClick={onClick}>
-      <IconFilename fullFilename={name} typography={Typography.BASE} />
-    </Row>
+    <ItemContainer flexDirection='column'>
+      <TreeRow id={id} onClick={onClick} alignItems='center' gap={0.5}>
+        <IconFilename fullFilename={name} typography={Typography.BASE} />
+      </TreeRow>
+    </ItemContainer>
   )
 }
 
@@ -87,20 +123,27 @@ const RenderTree: React.FC<Partial<Pick<FolderTreeProps, 'tree'>>> = ({
 export const FolderTree: React.FC<FolderTreeProps> = ({
   tree,
   onFileClick,
+  handleCheck,
   theme = 'dark',
   overrideTheme,
   activeId,
+  canSelect,
+  showLines,
 }) => {
   const memoizedTree = useMemo(() => reqSort(tree), [tree])
 
   return (
     <FolderTreeProvider
-      activeId={activeId}
-      onFileClick={onFileClick}
-      theme={theme}
-      overrideTheme={overrideTheme}
+      {...{
+        canSelect,
+        handleCheck,
+        activeId,
+        onFileClick,
+        theme,
+        overrideTheme,
+      }}
     >
-      <Container flexDirection='column'>
+      <Container flexDirection='column' showLines={showLines}>
         <RenderTree tree={memoizedTree} />
       </Container>
     </FolderTreeProvider>

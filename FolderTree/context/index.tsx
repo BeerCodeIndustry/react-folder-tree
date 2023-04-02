@@ -13,7 +13,10 @@ import { themes } from '../constants'
 export const FolderTreeContext = createContext<FolderTreeContextType>({
   onRowClick: () => {},
   onBlur: () => {},
+  onCheck: () => {},
+  canSelect: false,
   activeId: undefined,
+  selected: [],
 })
 
 export const FolderTreeProvider: React.FC<FolderTreeProviderType> = ({
@@ -22,7 +25,11 @@ export const FolderTreeProvider: React.FC<FolderTreeProviderType> = ({
   theme,
   overrideTheme,
   activeId,
+  handleCheck,
+  canSelect: _canSelect = false,
 }) => {
+  const canSelect = useMemo(() => _canSelect, [_canSelect])
+  const [selected, setSelected] = useState<string[]>([])
   const [activeNodeId, setActiveId] =
     useState<FolderTreeProviderType['activeId']>(activeId)
   const currTheme: Record<Theme, ThemeObj> = useMemo(
@@ -44,6 +51,16 @@ export const FolderTreeProvider: React.FC<FolderTreeProviderType> = ({
     setActiveId(id)
   }
 
+  // TODO: check tree structure
+  const onCheck = (id: Node['id']): void => {
+    const newSelected = selected.includes(id!)
+      ? selected.filter(_id => _id !== id)
+      : [...selected, id!]
+
+    if (handleCheck) handleCheck(newSelected)
+    setSelected(newSelected)
+  }
+
   const onBlur = (): void => {
     setActiveId(undefined)
   }
@@ -56,9 +73,12 @@ export const FolderTreeProvider: React.FC<FolderTreeProviderType> = ({
     () => ({
       onRowClick,
       activeId: activeNodeId,
+      selected,
+      onCheck,
       onBlur,
+      canSelect,
     }),
-    [onFileClick, activeNodeId],
+    [onFileClick, activeNodeId, selected, canSelect],
   )
 
   return (

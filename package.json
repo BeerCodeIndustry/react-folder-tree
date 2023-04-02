@@ -20,11 +20,12 @@
     "lint": "tsc --noEmit && eslint --no-error-on-unmatched-pattern --ext .js,.ts,.tsx . --fix",
     "prepare-husky": "husky install",
     "publish-lib": "yarn build-lib && npm publish --access public",
-    "pre-commit": "npx --no-install lint-staged"
+    "pre-commit": "npx --no-install lint-staged",
+    "start": "next dev"
   },
   "dependencies": {
-    "@beercode/common-frontend": "^0.12.2",
-    "@beercode/common-icons": "^0.6.1",
+    "@beercode/common-frontend": "^0.19.3",
+    "@beercode/common-icons": "^0.7.0",
     "@beercode/common-utils": "^0.5.0",
     "next": "12.3.1",
     "react": "18.2.0",

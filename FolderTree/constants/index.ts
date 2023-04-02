@@ -8,11 +8,13 @@ export const themes: Record<Theme, ThemeObj> = {
     active: colors.NEUTRAL_700,
     hover: colors.GRAY_800,
     lines: colors.NEUTRAL_500,
+    showLines: true,
   },
   light: {
     textColor: colors.BLACK,
     active: colors.BLUE_100,
     hover: colors.GRAY_200,
     lines: colors.NEUTRAL_300,
+    showLines: true,
   },
 }

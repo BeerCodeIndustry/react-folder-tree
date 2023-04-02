@@ -1,4 +1,5 @@
-import { Flexbox } from '@beercode/common-frontend'
+import { Flexbox , Checkbox as CFCheckbox } from '@beercode/common-frontend'
+
 import styled from 'styled-components'
 
 import { ThemeObj } from './FolderTree.types'
@@ -13,9 +14,10 @@ export const TreeContainer = styled(Flexbox)`
 
 export const NodeContainer = styled(Flexbox)``
 
-export const FolderContainer = styled(Flexbox)``
+export const ItemContainer = styled(Flexbox)``
 
 export const Row = styled(Flexbox)<{ active?: boolean; theme: ThemeObj }>`
+  position: relative;
   ${({ active, theme }) =>
     active &&
     `
@@ -25,17 +27,27 @@ export const Row = styled(Flexbox)<{ active?: boolean; theme: ThemeObj }>`
     cursor: pointer;
     background: ${({ theme }) => theme.hover};
   }
+  padding: 0.5rem 1rem;
 `
 
-export const Container = styled(Flexbox)<{ theme: ThemeObj }>`
+export const Checkbox = styled(CFCheckbox)`
+  position: absolute;
+  right: -2rem;
+`
+
+export const Container = styled(Flexbox)<{
+  theme: ThemeObj
+  showLines?: boolean
+}>`
   width: 16rem;
   color: ${({ theme }) => theme.textColor};
-  ${NodeContainer}, ${FolderContainer}, ${Row} {
+  ${NodeContainer}, ${ItemContainer}, ${Row} {
     width: 100%;
   }
   &:hover {
     ${TreeContainer}:not(:first-child) {
-      border-left: 1px solid ${({ theme }) => theme.lines};
+      ${({ showLines, theme }) =>
+        showLines && `border-left: 1px solid ${theme.lines}`};
     }
   }
 `
